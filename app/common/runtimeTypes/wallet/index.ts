@@ -1,5 +1,6 @@
 import * as t from "io-ts"
 import { JsonSerializable } from "app/common/serializers"
+// Serializable Buffer runtime type
 import { SerializableBuffer } from "app/common/runtimeTypes/storage/wallets"
 /**
  * Json runtime type. This type is intended to replace `any` and hence make function signatures

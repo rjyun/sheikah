@@ -129,10 +129,10 @@ export class WalletApi {
   }
 
   saveItem (params) {
-    return this._callApiMethod('saveItem')(params)
+    return this._callApiMethod('set')(params)
   }
 
   getItem (params) {
-    return this._callApiMethod('getItem')(params)
+    return this._callApiMethod('get')(params)
   }
 }

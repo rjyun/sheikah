@@ -21,6 +21,7 @@ export default {
   },
   methods:{
    changeStage: function (stage) {
+     console.log('--', stage)
     this.currentStage = stage
    },
   },
@@ -29,12 +30,13 @@ export default {
       currentTemplate: state => state.rad.currentTemplate,
     }),
     currentScript: function(){
+      console.log('--', this.currentTemplate)
       if(this.currentStage === "retrieve") {
         return this.currentTemplate.radRequest.retrieve
       } else if (this.currentStage === "aggregate") {
-        return this.this.currentTemplate.radRequest.aggregate
+        return this.currentTemplate.radRequest.aggregate.script
       } else if(this.currentStage === "consensus") {
-        return this.this.currentTemplate.radRequest.consensus
+        return this.currentTemplate.radRequest.consensus.script
       }
     }
   },

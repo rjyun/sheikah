@@ -9,38 +9,39 @@ import { match, generateId } from '@/utils'
 export default {
   state: {
     templates: {
-      fabada: {
-        name: 'chicho',
-        description: 'es redondo y bonito',
-        radRequest: {
-          not_before: 0,
-          retrieve: [
-            {
-              url: '',
-              kind: 'HTTP-GET',
-              script: [0x45],
-            },
-          ],
-          aggregate: {
-            script: [0x50],
-          },
-          consensus: {
-            script: [0x50],
-          },
-        },
-      },
+      // fabada: {
+      //   id: 'fabada',
+      //   name: 'chicho',
+      //   description: 'es redondo y bonito',
+      //   radRequest: {
+      //     not_before: 0,
+      //     retrieve: [
+      //       {
+      //         url: '',
+      //         kind: 'HTTP-GET',
+      //         script: [0x45],
+      //       },
+      //     ],
+      //     aggregate: {
+      //       script: [0x50],
+      //     },
+      //     consensus: {
+      //       script: [0x50],
+      //     },
+      //   },
+      // },
     },
     currentTemplate: {},
 
   },
   mutations: {
     pushOperator (state, { path }) {
-      if (path.stage === 'retrieve' && state.radRequest.retrieve[path.retrieveIndex].script.length === 0) {
-        state.radRequest.retrieve[path.retrieveIndex].script.push(67)
+      if (path.stage === 'retrieve' && state.currentTemplate.radRequest.retrieve[path.retrieveIndex].script.length === 0) {
+        state.currentTemplate.radRequest.retrieve[path.retrieveIndex].script.push(67)
       } else {
         const currentScript = Number.isInteger(parseInt(path.retrieveIndex))
-          ? state.radRequest[path.stage][path.retrieveIndex].script
-          : state.radRequest[path.stage].script
+          ? state.currentTemplate.radRequest[path.stage][path.retrieveIndex].script
+          : state.currentTemplate.radRequest[path.stage].script
         const scriptTypes = currentScript.map(getOutput)
         if (scriptTypes[0] === 'Self') {
           console.log(`ERROR pushing a new operator in stage ${path.stage} in stageIndex ${path.retrieveIndex}`)
@@ -62,31 +63,30 @@ export default {
 
           if (numberOfOperatorArguments === 0) {
             Number.isInteger(parseInt(path.retrieveIndex))
-              ? state.radRequest[path.stage][path.retrieveIndex].script.push(newOperatorCode)
-              : state.radRequest[path.stage].script.push(newOperatorCode)
+              ? state.currentTemplate.radRequest[path.stage][path.retrieveIndex].script.push(newOperatorCode)
+              : state.currentTemplate.radRequest[path.stage].script.push(newOperatorCode)
           } else {
             Number.isInteger(parseInt(path.retrieveIndex))
-              ? state.radRequest[path.stage][path.retrieveIndex].script.push([newOperatorCode])
-              : state.radRequest[path.stage].script.push(newOperatorCode)
+              ? state.currentTemplate.radRequest[path.stage][path.retrieveIndex].script.push([newOperatorCode])
+              : state.currentTemplate.radRequest[path.stage].script.push(newOperatorCode)
           }
         }
       }
     },
     updateRetrieveSource (state, { source, index }) {
-      state.radRequest.retrieve[index].url = source.url
-      state.radRequest.retrieve[index].kind = source.kind
+      state.currentTemplate.radRequest.retrieve[index].url = source.url
+      state.currentTemplate.radRequest.retrieve[index].kind = source.kind
     },
     deleteSource (state, { index }) {
-      console.log(this.sources)
-      state.radRequest.retrieve.splice(index, 1)
-      state.radRequest.retrieve.map(source => {
+      state.currentTemplate.radRequest.retrieve.splice(index, 1)
+      state.currentTemplate.radRequest.retrieve.map(source => {
         if (index < source.index) {
           return source.index--
         }
       })
     },
     pushRetrieve (state) {
-      state.radRequest.retrieve.push({
+      state.currentTemplate.radRequest.retrieve.push({
         url: '',
         kind: 'HTTP-GET',
         script: [],
@@ -95,47 +95,47 @@ export default {
     updateArgumentInput (state, { path, input, operator, argIndex }) {
       operator[argIndex] = input
       if (Number.isInteger(parseInt(path.retrieveIndex))) {
-        state.radRequest[`${path.stage}`][path.retrieveIndex][path.scriptIndex] = operator
+        state.currentTemplate.radRequest[`${path.stage}`][path.retrieveIndex][path.scriptIndex] = operator
       } else {
-        state.radRequest[`${path.stage}`][path.scriptIndex] = operator
+        state.currentTemplate.radRequest[`${path.stage}`][path.scriptIndex] = operator
       }
     },
     selectHashFunction: function (state, { path, hashFunctionCode, operator, argIndex }) {
       operator[argIndex] = hashFunctionCode
       if (Number.isInteger(parseInt(path.retrieveIndex))) {
-        state.radRequest[`${path.stage}`][path.retrieveIndex][path.scriptIndex] = operator
-        state.radRequest[`${path.stage}`] = [...state.radRequest[`${path.stage}`]]
+        state.currentTemplate.radRequest[`${path.stage}`][path.retrieveIndex][path.scriptIndex] = operator
+        state.currentTemplate.radRequest[`${path.stage}`] = [...state.currentTemplate.radRequest[`${path.stage}`]]
       } else {
-        state.radRequest[`${path.stage}`][path.scriptIndex] = operator
-        state.radRequest[`${path.stage}`] = { ...this[`${path.stage}`] }
+        state.currentTemplate.radRequest[`${path.stage}`][path.scriptIndex] = operator
+        state.currentTemplate.radRequest[`${path.stage}`] = { ...this[`${path.stage}`] }
       }
     },
     updateOperatorReduceArgument: function (state, { path, reduceArgument, operator, argIndex }) {
       operator[argIndex] = reduceArgument
       if (Number.isInteger(parseInt(path.retrieveIndex))) {
-        state.radRequest[`${path.stage}`][path.retrieveIndex].script[path.scriptIndex] = operator
-        state.radRequest[`${path.stage}`] = [...state.radRequest[`${path.stage}`]]
+        state.currentTemplate.radRequest[`${path.stage}`][path.retrieveIndex].script[path.scriptIndex] = operator
+        state.currentTemplate.radRequest[`${path.stage}`] = [...state.currentTemplate.radRequest[`${path.stage}`]]
       } else {
-        state.radRequest[`${path.stage}`].script[path.scriptIndex] = operator
-        state.radRequest[`${path.stage}`] = { ...state.radRequest[`${path.stage}`] }
+        state.currentTemplate.radRequest[`${path.stage}`].script[path.scriptIndex] = operator
+        state.currentTemplate.radRequest[`${path.stage}`] = { ...state.currentTemplate.radRequest[`${path.stage}`] }
       }
     },
     updateFilterArgument: function (state, { path, filterArgument, operator, argIndex }) {
       operator[argIndex] = [operator[argIndex][0], filterArgument]
       if (Number.isInteger(parseInt(path.retrieveIndex))) {
-        state.radRequest[`${path.stage}`][path.retrieveIndex][path.scriptIndex] = operator
-        state.radRequest[`${path.stage}`] = [...state.radRequest[`${path.stage}`]]
+        state.currentTemplate.radRequest[`${path.stage}`][path.retrieveIndex][path.scriptIndex] = operator
+        state.currentTemplate.radRequest[`${path.stage}`] = [...state.currentTemplate.radRequest[`${path.stage}`]]
       } else {
-        state.radRequest[`${path.stage}`][path.scriptIndex] = operator
-        state.radRequest[`${path.stage}`] = { ...state.radRequest[`${path.stage}`] }
+        state.currentTemplate.radRequest[`${path.stage}`][path.scriptIndex] = operator
+        state.currentTemplate.radRequest[`${path.stage}`] = { ...state.currentTemplate.radRequest[`${path.stage}`] }
       }
     },
     updateOperatorFilterArgument: function (state, { path, filterFunctionCode, operator, argIndex }) {
       operator[argIndex] = [filterFunctionCode, '']
       if (Number.isInteger(parseInt(path.retrieveIndex))) {
-        state.radRequest[`${path.stage}`][path.retrieveIndex][path.scriptIndex] = operator
+        state.currentTemplate.radRequest[`${path.stage}`][path.retrieveIndex][path.scriptIndex] = operator
       } else {
-        state.radRequest[`${path.stage}`][path.scriptIndex] = operator
+        state.currentTemplate.radRequest[`${path.stage}`][path.scriptIndex] = operator
       }
     },
     updateOperatorCodeSelect: function (state, { path, operatorCode }) {
@@ -192,69 +192,82 @@ export default {
         ])
       })
       if (path.stage === 'retrieve') {
-        state.radRequest[`${path.stage}`][path.retrieveIndex].script[path.scriptIndex] = [
+        state.currentTemplate.radRequest[`${path.stage}`][path.retrieveIndex].script[path.scriptIndex] = [
           parseInt(operatorCode),
           ...args,
         ]
         if (!isValidScript('')) {
-          state.radRequest[`${path.stage}`][path.retrieveIndex].script.splice(
+          state.currentTemplate.radRequest[`${path.stage}`][path.retrieveIndex].script.splice(
             path.scriptIndex + 1,
-            state.radRequest[`${path.stage}`][path.retrieveIndex].script.length,
+            state.currentTemplate.radRequest[`${path.stage}`][path.retrieveIndex].script.length,
           )
         }
-        state.radRequest[`${path.stage}`] = { ...state.radRequest[`${path.stage}`] }
+        state.currentTemplate.radRequest[`${path.stage}`] = { ...state.currentTemplate.radRequest[`${path.stage}`] }
       } else {
-        state.radRequest[`${path.stage}`].script[path.scriptIndex] = [
+        state.currentTemplate.radRequest[`${path.stage}`].script[path.scriptIndex] = [
           parseInt(operatorCode),
           ...args,
         ]
         if (!isValidScript('')) {
-          state.radRequest[`${path.stage}`].script.splice(
+          state.currentTemplate.radRequest[`${path.stage}`].script.splice(
             path.scriptIndex + 1,
-            state.radRequest[`${path.stage}`].script.length,
+            state.currentTemplate.radRequest[`${path.stage}`].script.length,
           )
         }
-        state.radRequest[`${path.stage}`] = { ...state.radRequest[`${path.stage}`] }
+        state.currentTemplate.radRequest[`${path.stage}`] = { ...state.currentTemplate.radRequest[`${path.stage}`] }
       }
     },
     setTemplates: function (state, { templates }) {
-      state.templates = templates
+      console.log('ttttttt', templates)
+      if (templates) {
+        state.templates = templates
+        console.log('..............', state.templates)
+      }
+    },
+    createTemplate: function (state) {
+      console.log('----', Object.keys(state.templates).length)
+      state.currentTemplate = {
+        creationDate: Date.now(),
+        id: generateId(),
+        name: `Template ${Object.keys(state.templates).length + 1}`,
+        description: '',
+        radRequest: {
+          not_before: 0,
+          retrieve: [
+            {
+              url: '',
+              kind: 'HTTP-GET',
+              script: [0x45],
+            },
+          ],
+          aggregate: {
+            script: [0x50],
+          },
+          consensus: {
+            script: [0x50],
+          },
+        },
+      }
     },
     setCurrentTemplate: function (state, { id }) {
-      state.currentTemplate = id
-        ? state.templates[id]
-        : {
-          id: generateId(),
-          name: `Template ${state.templates.length}`,
-          description: '',
-          radRequest: {
-            not_before: 0,
-            retrieve: [
-              {
-                url: '',
-                kind: 'HTTP-GET',
-                script: [0x45],
-              },
-            ],
-            aggregate: {
-              script: [0x50],
-            },
-            consensus: {
-              script: [0x50],
-            },
-          },
-        }
+      console.log('id', id)
+      console.log('templates--', state.templates)
+      state.currentTemplate = state.templates[id]
     },
   },
-  action: {
+  actions: {
     saveTemplate: async function (context, params) {
+      console.log('Saving Template...')
       let templates = context.state.templates
-      templates = templates[context.state.currentTemplate]
+      console.log('Context Templates ------->', context.state.templates)
+      templates[context.state.currentTemplate.id] = context.state.currentTemplate
+      console.log('Templatessss ------->', templates)
       const request = await this.$walletApi.saveItem({
         walletId: context.rootState.wallet.walletId,
         sessionId: context.rootState.wallet.sessionId,
         key: 'templates',
         value: templates,
+        creationDate: Date.now(),
       })
       if (request.result) {
         console.log(request.result)
@@ -263,16 +276,22 @@ export default {
       }
     },
     getTemplates: async function (context, params) {
+      console.log('Getting Templates')
       const request = await this.$walletApi.getItem({
         walletId: context.rootState.wallet.walletId,
         sessionId: context.rootState.wallet.sessionId,
         key: 'templates',
       })
       if (request.result) {
-        context.commit('setTemplates', { templates: request.result })
+        context.commit('setTemplates', { templates: request.result.value })
       } else {
         console.log(request)
       }
+    },
+    deleteTemplate: async function (context, { id }) {
+      // delete context.state.templates[id]
+      // context.state.templates = { ...context.state.templates }
+      context.state.templates.$delete(id)
     },
   },
 }

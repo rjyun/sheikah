@@ -13,7 +13,6 @@
               <button class="delete-btn" @click="deleteSource(source.index)"><font-awesome-icon class="icon" icon="trash"/></button>
             </div>
             <div class="header-operators">
-              {{source}}
               <Select
                 class="select"
                 v-model="source.kind"
@@ -62,11 +61,7 @@ export default {
   components: {
     Select,
   },
-  updated() {
-    console.log(this.sources)
-  },
   data() {
-    console.log(this.sources)
     return {
       counter: 0,
     }
@@ -102,7 +97,6 @@ export default {
       if(this.sources.length > 2) this.moveCarousel(-1)
     },
     updateSource: function (sourceInformation, sourceIndex) {
-      console.log(sourceInformation)
       this.$store.commit('updateRetrieveSource', { source: sourceInformation, index: sourceIndex })
     },
   }

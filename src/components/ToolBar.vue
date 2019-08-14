@@ -3,7 +3,7 @@
     <router-link class="back" to="/request/templates">
     <img class="back-btn" src="@/resources/svg/arrow-to-left.svg">
     </router-link>
-    <button v-for="tab in tabs" :key="tab.icon" :class="tab.class" :to="tab.action">{{ tab.icon }}</button>
+    <button v-for="tab in tabs" :key="tab.icon" :class="tab.class" @click="tab.action">{{ tab.icon }}</button>
   </div>
 </template>
 
@@ -15,6 +15,7 @@ export default {
       this.$store.dispatch('tryDataRequest')
     },
     saveTemplate: function () {
+      console.log('Trying to save...')
       this.$store.dispatch('saveTemplate')
     }
   },

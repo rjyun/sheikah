@@ -1,20 +1,21 @@
 <template>
-
 <div>
   <TopBar :tabs="tabs" />
-  <div class="container-templates">
-    <TemplateCard class="card" v-for="template in templates" :key="template.content">
-      <template v-slot:title>
-        {{template.header}}
-      </template>
-      <template v-slot:description>
-        {{template.content}}
-      </template>
-    </TemplateCard>
+    <div v-if="Object.entries(templates)" class="container-templates">
+
+    <TemplateCard 
+      v-for="template in templates"
+      class="card" 
+      :name="template.name"
+      :id="template.id"
+      :description="template.description"
+      :key="template.id"
+    />
+    </div>
+    <div v-else>You don't have templates yet.</div>
     <router-link class="add" to="/request/editor">
-    <img @click="setCurrentTemplate" class="add-btn" src="@/resources/svg/add.svg">
+    <img @click="createTemplate" class="add-btn" src="@/resources/svg/add.svg">
     </router-link>
-  </div>
 </div>
 </template>
 
@@ -30,7 +31,13 @@ export default {
     TopBar,
   },
 
+  beforeMount(){
+    console.log('Before Mount Get Templates------>')
+    this.$store.dispatch('getTemplates')
+  },
+
   data (){
+    console.log('Object.entries(templates)', this.templates)
     return {
       tabs: [
         { name: 'Templates', link: '/request/templates' },
@@ -40,13 +47,25 @@ export default {
 
   computed:{
      ...mapState({
-      templates: state => state.rad.templates,
+      templates: state => Object.entries(state.rad.templates)
+        .map((template) => {
+          return {
+            id: template[0], 
+            ...template[1],
+          }
+        })
+        .sort((a , b) => parseInt(a.creationDate) - parseInt(b.creationDate)
+      )
     }),
   },
-
+  watch: {
+    templates: function(value) {
+      console.log('value', value)
+    }
+  },
   methods: {
-    setCurrentTemplate: function () {
-      this.$store.commit('setCurrentTemplate')
+    createTemplate: function () {
+      this.$store.commit('createTemplate')
     }
   },
 }
@@ -62,6 +81,7 @@ export default {
     flex: 0 1 calc(30% - 1em);
     margin:20px;
   }
+}
   .add{
     display: flex;
     justify-content: center;
@@ -74,7 +94,6 @@ export default {
         cursor: pointer;
       }
     }
-}
 }
 
 </style>

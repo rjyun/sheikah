@@ -2,7 +2,6 @@
   <div class="" v-if="stage ==='retrieve'">
     <Carousel :sources="script.map((x, index) => {x.index = index; return x})"/>
   </div>
-
   <div v-else-if="stage ==='aggregate'"> 
   <p>Aggregate</p>
     <RadonScript
@@ -26,11 +25,8 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 import RadonScript from '@/components/RadonScript.vue'
 import RadonStage from '@/components/RadonStage.vue'
-import Select from '@/components/Select'
 import Carousel from '@/components/Carousel'
 
 export default {
@@ -38,7 +34,6 @@ export default {
   components: {
     RadonScript,
     RadonStage,
-    Select,
     Carousel,
   },
   props: {
@@ -46,8 +41,8 @@ export default {
     script: [Array, Object],
   },
   data () {
+    console.log("Script:", this.script)
     return {
-
       error: {
         retrieve: false,
         aggregate: false,

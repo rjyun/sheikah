@@ -12,7 +12,7 @@
       </template>
     </TemplateCard>
     <router-link class="add" to="/request/editor">
-    <img class="add-btn" src="@/resources/svg/add.svg">
+    <img @click="setCurrentTemplate" class="add-btn" src="@/resources/svg/add.svg">
     </router-link>
   </div>
 </div>
@@ -21,6 +21,7 @@
 <script>
 import TemplateCard from './card/TemplateCard'
 import TopBar from '@/components/TopBar.vue'
+import {mapState} from 'vuex'
 
 export default {
   name: 'Templates',
@@ -34,37 +35,20 @@ export default {
       tabs: [
         { name: 'Templates', link: '/request/templates' },
       ],
-      templates: [
-      {
-        header: 'Template 1',
-        content: 'Lorem ipsum dolor sit amet consectetur adipiscing elit dapibus taciti suspendisse vehicula, magna in hac sed fermentum sociosqu parturient viverra justo.',
-      },
-      {
-        header: 'Template 2',
-        content: 'Lorem ipsum dolor sit amet consectetur adipiscing elit dapibus taciti suspendisse vehicula, magna in hac sed fermentum sociosqu parturient viverra justo.',
-      },
-      {
-        header: 'Template 3',
-        content: 'Lorem ipsum dolor sit amet consectetur adipiscing elit dapibus taciti suspendisse vehicula, magna in hac sed fermentum sociosqu parturient viverra justo.',
-      },
-      {
-        header: 'Template 4',
-        content: 'Lorem ipsum dolor sit amet consectetur adipiscing elit dapibus taciti suspendisse vehicula, magna in hac sed fermentum sociosqu parturient viverra justo.',
-      },
-      {
-        header: 'Template 5',
-        content: 'Lorem ipsum dolor sit amet consectetur adipiscing elit dapibus taciti suspendisse vehicula, magna in hac sed fermentum sociosqu parturient viverra justo.',
-      },
-      {
-        header: 'Template 6',
-        content: 'Lorem ipsum dolor sit amet consectetur adipiscing elit dapibus taciti suspendisse vehicula, magna in hac sed fermentum sociosqu parturient viverra justo.',
-      },
-      {
-        header: 'Template 7',
-        content: 'Lorem ipsum dolor sit amet consectetur adipiscing elit dapibus taciti suspendisse vehicula, magna in hac sed fermentum sociosqu parturient viverra justo.',
-      }]
     }
-  }
+  },
+
+  computed:{
+     ...mapState({
+      templates: state => state.rad.templates,
+    }),
+  },
+
+  methods: {
+    setCurrentTemplate: function () {
+      this.$store.commit('setCurrentTemplate')
+    }
+  },
 }
 </script>
 <style lang="scss">

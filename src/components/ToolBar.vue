@@ -14,6 +14,9 @@ export default {
     tryDataRequest: function () {
       this.$store.dispatch('tryDataRequest')
     },
+    saveTemplate: function () {
+      this.$store.dispatch('saveTemplate')
+    }
   },
   data(){
     return{
@@ -27,7 +30,7 @@ export default {
         class:'end'
         },
         {icon: 'Save', 
-        action: 'Save changes',
+        action: this.saveTemplate,
         class:'end'
         },
         {icon: 'Try data request', 

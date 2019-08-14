@@ -29,6 +29,7 @@ export default {
       options: [{
         label: 'Edit',
         action: () => {
+          this.setCurrentTemplate()
           this.$router.push('/request/editor')
         },
       },
@@ -43,13 +44,20 @@ export default {
          
         },
       }],
-      
     }
+  },
+  props: {
+    id: String,
+    name: String,
+    description: String,
   },
   methods: {
     handleCommand (index) {
       this.options[index].action()
     },
+    setCurrentTemplate () {
+      this.$store.commit('setCurrentTemplate', {id: this.id})
+    }
   },
 }
 </script>

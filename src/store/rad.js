@@ -4,26 +4,34 @@ import {
   TYPES as RadonTypes,
 } from '@/radon'
 import { getOutput, isValidScript } from '@/radon/utils'
-import { match } from '@/utils'
+import { match, generateId } from '@/utils'
 
 export default {
   state: {
-    radRequest: {
-      not_before: 0,
-      retrieve: [
-        {
-          url: '',
-          kind: 'HTTP-GET',
-          script: [0x45],
+    templates: {
+      fabada: {
+        name: 'chicho',
+        description: 'es redondo y bonito',
+        radRequest: {
+          not_before: 0,
+          retrieve: [
+            {
+              url: '',
+              kind: 'HTTP-GET',
+              script: [0x45],
+            },
+          ],
+          aggregate: {
+            script: [0x50],
+          },
+          consensus: {
+            script: [0x50],
+          },
         },
-      ],
-      aggregate: {
-        script: [0x50],
-      },
-      consensus: {
-        script: [0x50],
       },
     },
+    currentTemplate: {},
+
   },
   mutations: {
     pushOperator (state, { path }) {
@@ -207,6 +215,63 @@ export default {
           )
         }
         state.radRequest[`${path.stage}`] = { ...state.radRequest[`${path.stage}`] }
+      }
+    },
+    setTemplates: function (state, { templates }) {
+      state.templates = templates
+    },
+    setCurrentTemplate: function (state, { id }) {
+      state.currentTemplate = id
+        ? state.templates[id]
+        : {
+          id: generateId(),
+          name: `Template ${state.templates.length}`,
+          description: '',
+          radRequest: {
+            not_before: 0,
+            retrieve: [
+              {
+                url: '',
+                kind: 'HTTP-GET',
+                script: [0x45],
+              },
+            ],
+            aggregate: {
+              script: [0x50],
+            },
+            consensus: {
+              script: [0x50],
+            },
+          },
+        }
+    },
+  },
+  action: {
+    saveTemplate: async function (context, params) {
+      let templates = context.state.templates
+      templates = templates[context.state.currentTemplate]
+      const request = await this.$walletApi.saveItem({
+        walletId: context.rootState.wallet.walletId,
+        sessionId: context.rootState.wallet.sessionId,
+        key: 'templates',
+        value: templates,
+      })
+      if (request.result) {
+        console.log(request.result)
+      } else {
+        console.log(request)
+      }
+    },
+    getTemplates: async function (context, params) {
+      const request = await this.$walletApi.getItem({
+        walletId: context.rootState.wallet.walletId,
+        sessionId: context.rootState.wallet.sessionId,
+        key: 'templates',
+      })
+      if (request.result) {
+        context.commit('setTemplates', { templates: request.result })
+      } else {
+        console.log(request)
       }
     },
   },

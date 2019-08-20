@@ -39,37 +39,9 @@
                       "
                     />
                   </div>
-                  <div class="header-operators">
-                    <Select
-                      class="select"
-                      v-model="source.kind"
-                      @change="
-                        selectValue =>
-                          updateSource({ kind: selectValue, url: source.url }, source.index)
-                      "
-                      :options="[{ value: 'HTTPS_GET', primaryText: 'HTTPS_GET' }]"
-                    />
-                    <div>
-                      <input
-                        class="input"
-                        placeholder="url"
-                        type="text"
-                        v-model="source.url"
-                        @change="
-                          e =>
-                            updateSource({ kind: source.kind, url: e.target.value }, source.index)
-                        "
-                      />
-                    </div>
-                    <div class="button-container">
-                      <button class="add-operators-btn">Add operators</button>
-                    </div>
-                  </div>
+                  <RadonScript :script="source.script" />
                 </div>
               </div>
-              <button @click="addSource" class="add-source">
-                <img src="@/resources/svg/add.svg" />
-              </button>
             </div>
           </transition-group>
           <button @click="addSource" class="add-source">
@@ -86,6 +58,7 @@
 
 <script>
 import Select from '@/components/Select'
+import RadonScript from '@/components/RadonScript'
 
 export default {
   name: 'Carousel',
@@ -94,6 +67,7 @@ export default {
   },
   components: {
     Select,
+    RadonScript,
   },
   data() {
     return {
@@ -258,27 +232,6 @@ export default {
           padding: 0px;
           height: 10px;
           margin-left: auto;
-        }
-      }
-      .button-container {
-        text-align: center;
-
-        .add-operators-btn {
-          cursor: pointer;
-          margin: 30px;
-          width: 150px;
-          padding: 5px;
-          font-size: 18px;
-          background-color: #1a6cfb;
-          border-radius: 5px;
-          color: white;
-          font-family: 'Titillium Web';
-          font-weight: bold;
-
-          &:active,
-          &:focus {
-            outline: none;
-          }
         }
       }
     }

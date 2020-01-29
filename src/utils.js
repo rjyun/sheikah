@@ -2,14 +2,81 @@ import cbor from 'cbor'
 import uuidv4 from 'uuid/v4'
 
 export function encodeDataRequest(radRequest) {
+  console.log("-encodeDataRequest->", radRequest)
+  // return {
+  //   time_lock: radRequest.timelock || 0,
+  //   retrieve: radRequest.retrieve.map(retrieve => {
+  //     return { ...retrieve, script: [...cbor.encode(retrieve.script)] }
+  //   }),
+  //   aggregate: encodeAggregationTally(radRequest.aggregate),
+  //   tally: encodeAggregationTally(radRequest.tally),
+  // }
   return {
-    timelock: radRequest.timelock,
-    retrieve: radRequest.retrieve.map(retrieve => {
-      return { ...retrieve, script: [...cbor.encode(retrieve.script)] }
-    }),
-    aggregate: { script: [...cbor.encode(radRequest.aggregate.script)] },
-    tally: { script: [...cbor.encode(radRequest.tally.script)] },
-    deliver: radRequest.deliver,
+    "time_lock": 1574703683,
+    "retrieve": [
+      {
+        "kind": "HTTP-GET",
+        "url": "https://www.bitstamp.net/api/ticker/",
+        "script": [
+          130,
+          24,
+          119,
+          130,
+          24,
+          100,
+          100,
+          108,
+          97,
+          115,
+          116
+        ]
+      },
+      {
+        "kind": "HTTP-GET",
+        "url": "https://api.coindesk.com/v1/bpi/currentprice.json",
+        "script": [
+          132,
+          24,
+          119,
+          130,
+          24,
+          102,
+          99,
+          98,
+          112,
+          105,
+          130,
+          24,
+          102,
+          99,
+          85,
+          83,
+          68,
+          130,
+          24,
+          100,
+          106,
+          114,
+          97,
+          116,
+          101,
+          95,
+          102,
+          108,
+          111,
+          97,
+          116
+        ]
+      }
+    ],
+    "aggregate": {
+      "filters": [],
+      "reducer": 3
+    },
+    "tally": {
+      "filters": [],
+      "reducer": 3
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 import router from '@/router'
 import { WalletApi } from '@/api'
+import { encodeDataRequest } from '@/utils'
 
 export default {
   state: {
@@ -356,7 +357,7 @@ export default {
       })
       // TODO: The Wallet should provide a method to send the Data Request Result.
       const request = await context.state.api.runRadRequest({
-        radRequest: context.rootState.rad.currentRadonMarkupInterpreter.getMir(),
+        radRequest: encodeDataRequest(context.rootState.rad.currentRadonMarkupInterpreter.getMir()),
       })
       if (request.result) {
         context.commit('setDataRequestResult', { dataRequest: request.result })
@@ -372,9 +373,6 @@ export default {
         const key = variable.variable
         context.commit('updateTemplate', { id, value: '$' + key })
       })
-      // const request = await context.state.api.runRadRequest({
-      //   radRequest: encodeDataRequest(context.rootState.rad.currentRadonMarkupInterpreter.getMir()),
-      // })
     },
   },
 }

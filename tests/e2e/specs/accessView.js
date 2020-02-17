@@ -1,4 +1,5 @@
-describe('Land correctly in every view accesible from the home page', () => {
+// TODO: remove skip in tests when new rust release is ready
+describe.skip('Land correctly in every view accesible from the home page', () => {
   beforeEach(() => {
     cy.createAndUnlockWallet()
   })

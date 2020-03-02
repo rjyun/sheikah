@@ -18,11 +18,11 @@
         <div class="top">
           <Balances :total="total" :currency="currency" />
           <div class="send-received">
-            <el-button data-test="send-btn" @click="displayModalSend" type="primary">
-              Send
-            </el-button>
             <el-button data-test="receive-btn" @click="displayModalReceive">
               Receive
+            </el-button>
+            <el-button data-test="send-btn" @click="displayModalSend" type="primary">
+              Send
             </el-button>
           </div>
           <el-dialog

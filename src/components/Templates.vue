@@ -21,8 +21,8 @@
         v-on:close="() => clearError(error.name)"
       />
     </div>
-    <div v-if="Object.entries(templates)" class="container-templates">
-      <div class="add">
+    <div v-if="Object.entries(paginatedItems)" class="container-templates">
+      <div v-show="currentPage === 1" class="add">
         <router-link to="/request/editor">
           <img
             data-test="create-template"
@@ -33,7 +33,7 @@
         </router-link>
       </div>
       <TemplateCard
-        v-for="template in templates"
+        v-for="template in paginatedItems"
         class="card"
         :name="template.name"
         :id="template.id"
@@ -46,6 +46,15 @@
     </div>
     <div v-else>
       You don't have templates yet.
+    </div>
+    <div v-show="templates.length" class="pagination-nav">
+      <el-pagination
+        @current-change="handleCurrentChange"
+        :page-size="itemsPerPage"
+        layout="prev, pager, next"
+        :total="templates.length"
+        :current-page="currentPage"
+      />
     </div>
     <input :style="{ display: 'none' }" type="file" ref="fileInput" @change="readFile" />
     <el-dialog :visible.sync="dialogVisible" v-on:close="closeAndClear">
@@ -89,12 +98,20 @@ export default {
   },
   data() {
     return {
+      currentPage: 1,
+      itemsPerPage: 8,
       tabs: [{ name: 'Templates', link: '/request/templates' }],
       dialogVisible: false,
       currentTemplate: '',
     }
   },
   computed: {
+    paginatedItems() {
+      this.getItemsPerPage()
+      const from = this.currentPage * this.itemsPerPage - this.itemsPerPage
+      const to = this.currentPage * this.itemsPerPage
+      return this.templates.slice(from, to)
+    },
     ...mapState({
       templates: state =>
         Object.entries(state.rad.templates)
@@ -153,6 +170,12 @@ export default {
     }),
   },
   methods: {
+    getItemsPerPage() {
+      this.currentPage === 1 ? (this.itemsPerPage = 8) : (this.itemsPerPage = 9)
+    },
+    handleCurrentChange(val) {
+      this.currentPage = val
+    },
     toggleUpdated() {
       this.variablesUpdated = !this.variablesUpdated
     },
@@ -242,6 +265,10 @@ export default {
       background-color: $blue-1;
     }
   }
+}
+.pagination-nav {
+  padding: 16px 0px 16px 0px;
+  text-align: center;
 }
 .el-dialog {
   min-width: 500px;

@@ -133,7 +133,7 @@ export default {
         if (state.wallet.errors.createVTT) {
           return {
             message: state.wallet.errors.createVTT.message,
-            description: state.wallet.errors.createVTT.error.message,
+            description: state.wallet.errors.createVTT.error,
             name: state.wallet.errors.createVTT.name,
           }
         }
@@ -143,7 +143,7 @@ export default {
         if (state.wallet.errors.sendTransaction) {
           return {
             message: state.wallet.errors.sendTransaction.message,
-            description: state.wallet.errors.sendTransaction.error.message,
+            description: state.wallet.errors.sendTransaction.error,
             name: state.wallet.errors.sendTransaction.name,
           }
         }
@@ -152,7 +152,7 @@ export default {
         if (state.wallet.errors.getAddresses) {
           return {
             message: state.wallet.errors.getAddresses.message,
-            description: state.wallet.errors.getAddresses.error.message,
+            description: state.wallet.errors.getAddresses.error,
             name: state.wallet.errors.getAddresses.name,
           }
         }
@@ -161,7 +161,7 @@ export default {
         if (state.wallet.errors.generateAddress) {
           return {
             message: state.wallet.errors.generateAddress.message,
-            description: state.wallet.errors.generateAddress.error.message,
+            description: state.wallet.errors.generateAddress.error,
             name: state.wallet.errors.generateAddress.name,
           }
         }
@@ -170,7 +170,7 @@ export default {
         if (state.wallet.errors.getBalance) {
           return {
             message: state.wallet.errors.getBalance.message,
-            description: state.wallet.errors.getBalance.error.message,
+            description: state.wallet.errors.getBalance.error,
             name: state.wallet.errors.getBalance.name,
           }
         }
@@ -179,7 +179,7 @@ export default {
         if (state.wallet.errors.getTransactions) {
           return {
             message: state.wallet.errors.getTransactions.message,
-            description: state.wallet.errors.getTransactions.error.message,
+            description: state.wallet.errors.getTransactions.error,
             name: state.wallet.errors.getTransactions.name,
           }
         }
@@ -188,7 +188,7 @@ export default {
         if (state.wallet.errors.getItem) {
           return {
             message: state.wallet.errors.getItem.message,
-            description: state.wallet.errors.getItem.error.message,
+            description: state.wallet.errors.getItem.error,
             name: state.wallet.errors.getItem.name,
           }
         }

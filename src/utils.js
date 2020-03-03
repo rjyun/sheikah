@@ -2,6 +2,37 @@ import cbor from 'cbor'
 import uuidv4 from 'uuid/v4'
 import { WIT_UNIT } from '@/constants'
 
+export function createNotification() {
+  if (!('Notification' in window)) {
+    throw new Error("Browser doesn't support notifications")
+  }
+  switch (Notification.permission) {
+    case 'granted': {
+      return innerCreateNotification
+    }
+    case 'denied': {
+      alert('Notification already denied')
+      break
+    }
+    case 'default': {
+      Notification.requestPermission(permission => {
+        if (permission === 'granted') {
+          return innerCreateNotification
+        }
+        alert('Notification denied')
+      })
+    }
+  }
+  function innerCreateNotification(notificationProps) {
+    const notification = new Notification(notificationProps.title, notificationProps)
+    if (Number.isInteger(notificationProps.closeTimeout)) {
+      setTimeout(() => {
+        notification.close()
+      }, notificationProps.closeTimeout)
+    }
+  }
+}
+
 function encodeAggregationTally(stage) {
   return {
     filters: stage.filters.map(filter => {

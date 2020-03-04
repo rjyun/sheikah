@@ -26,7 +26,11 @@
         />
       </li>
       <li>
-        <RedirectionOption type="forward" link="" name="Import and advanced options" />
+        <RedirectionOption
+          type="forward"
+          link="/ftu/import-wallet"
+          name="Import and advanced options"
+        />
       </li>
       <li>
         <RedirectionOption type="backward" link="/ftu/welcome" name="Cancel" />
